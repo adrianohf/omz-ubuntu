@@ -60,20 +60,14 @@ $4 " " $5 " " $6}'
 # Function: Plugin Site-Functions (Disabled)
 # -------------------------------------------------------------------
 filecount() {
-    if [ $# -ne 1 ]; then
+    if [ $# -ne 1 ] || [ ! -d "$1" ]; then
         echo "Use: filecount <directory>"
         return 1
     fi
     
-    local directory="$1"
+    local directory_numbers files_numbers
     
-    if [ ! -d "$directory" ]; then
-        echo "The directory specified by the parameter does not exist."
-        return 1
-    fi
-    
-    local directory_numbers=$(find "$directory" -type d | wc -l)
-    local files_numbers=$(find "$directory" -type f | wc -l)
+    read directory_numbers _ files_numbers _ < <(find "$1" -type d -printf . -o -type f -printf .)
     
     echo "Directory numbers: $directory_numbers"
     echo "Files numbers: $files_numbers"
