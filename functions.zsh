@@ -10,18 +10,6 @@ function update_system() {
         brew cu -a -f -v -y --cleanup
     fi
     brew doctor
-    # brew cleanup -s
-    # brew missing
-    # brew list
-    # brew services list
-    # brew cask list
-    # brew cask outdated
-    # brew cask outdated --greedy
-    # brew cask upgrade --greedy
-    # brew cask cleanup -s
-    # brew cask doctor
-    # brew cask cleanup -s
-    # brew cask missing
     echo "Updating macOS..."
     sudo softwareupdate -i -a
 }
