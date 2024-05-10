@@ -1,9 +1,6 @@
-# -------------------------------------------------------------------
-# Function: free
-# -------------------------------------------------------------------
 # Function: Update System
 function update_system() {
-    echo "Atualizando Homebrew..."
+    echo "Updating Homebrew..."
     brew update
     brew upgrade
     brew upgrade --cask
@@ -25,13 +22,16 @@ function update_system() {
     # brew cask doctor
     # brew cask cleanup -s
     # brew cask missing
-    echo "Atualizando macOS..."
+    echo "Updating macOS..."
     sudo softwareupdate -i -a
 }
 
-
+# -------------------------------------------------------------------
+# Function: free
+# -------------------------------------------------------------------
 function free() {
-  vm_stat | perl -ne '/page size of (\d+)/ and $size=$1; /Pages\s+([^:]+)[^\d]+(\d+)/ and printf("%-16s % 16.2f Mi\n", "$1:", $2 * $size / 1048576);'
+  vm_stat | awk -v size=$(grep -o 'page size of [0-9]*' | cut -d' ' -f3) '
+  /Pages/{printf("%-16s % 16.2f Mi\n", $1, $2*size/1048576)}'
 }
 # -------------------------------------------------------------------
 # Function: ManPager
@@ -42,8 +42,7 @@ export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 # Function: Git (add, commit and push)
 # -------------------------------------------------------------------
 function gcommit() {
-  #git add -A; git commit -m "$1"; git push; git status
-  gaa; gcmsg "$1"; gpv
+  git add -A && git commit -m "$1" && git push --set-upstream origin $(git_current_branch) && git status -sb
 }
 
 # -------------------------------------------------------------------
@@ -62,20 +61,20 @@ $4 " " $5 " " $6}'
 # -------------------------------------------------------------------
 filecount() {
     if [ $# -ne 1 ]; then
-        echo "Uso: filecount <diretório>"
+        echo "Use: filecount <directory>"
         return 1
     fi
     
-    local diretorio="$1"
+    local directory="$1"
     
-    if [ ! -d "$diretorio" ]; then
-        echo "O diretório especificado não existe"
+    if [ ! -d "$directory" ]; then
+        echo "The directory specified by the parameter does not exist."
         return 1
     fi
     
-    local numero_diretorios=$(find "$diretorio" -type d | wc -l)
-    local numero_arquivos=$(find "$diretorio" -type f | wc -l)
+    local directory_numbers=$(find "$directory" -type d | wc -l)
+    local files_numbers=$(find "$directory" -type f | wc -l)
     
-    echo "Número de diretórios: $numero_diretorios"
-    echo "Número de arquivos: $numero_arquivos"
+    echo "Directory numbers: $directory_numbers"
+    echo "Files numbers: $files_numbers"
 }
